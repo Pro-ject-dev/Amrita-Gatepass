@@ -37,6 +37,8 @@ dependencies:
   lucide_icons: ^0.257.0
   mobile_scanner: ^7.0.1
   get:
+  flutter_screenutil: ^5.9.3
+  google_fonts: ^6.3.0
 
 dev_dependencies:
   flutter_test:
