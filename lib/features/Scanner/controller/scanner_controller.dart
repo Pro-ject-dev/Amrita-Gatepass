@@ -8,6 +8,7 @@ class ScannerController extends GetxController {
   RxBool isFlashOn = false.obs;
   RxBool isScanning = true.obs;
 
+
   @override
   void onInit() {
     super.onInit();

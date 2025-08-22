@@ -1,6 +1,6 @@
 import 'package:amrita_gatepass/themes/app_colors.dart';
-import 'package:amrita_gatepass/utils/app_pages.dart';
-import 'package:amrita_gatepass/utils/app_routes.dart';
+import 'package:amrita_gatepass/routes/app_pages.dart';
+import 'package:amrita_gatepass/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
