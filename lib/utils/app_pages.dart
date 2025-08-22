@@ -1,3 +1,5 @@
+import 'package:amrita_gatepass/features/Home/bindings/home_bindings.dart';
+import 'package:amrita_gatepass/features/Home/view/home_page.dart';
 import 'package:amrita_gatepass/features/Scanner/bindings/scanner_bindings.dart';
 import 'package:amrita_gatepass/features/Scanner/view/scanner_screen.dart';
 import 'package:amrita_gatepass/utils/app_routes.dart';
@@ -9,6 +11,11 @@ class AppPages {
       name: AppRoutes.scannerPage,
       page: () => ScannerScreen(),
       binding: ScannerBindings(),
+    ),
+    GetPage(
+      name: AppRoutes.homePage,
+      page: () => HomePage(),
+      binding: HomeBindings(),
     ),
    ];
 }

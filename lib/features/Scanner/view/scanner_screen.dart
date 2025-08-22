@@ -1,5 +1,7 @@
 import 'package:amrita_gatepass/features/Scanner/controller/scanner_controller.dart';
+import 'package:amrita_gatepass/themes/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -11,39 +13,61 @@ class ScannerScreen extends GetView<ScannerController> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
+        foregroundColor: AppColors.appBarForeGroundColor,
         backgroundColor: Colors.black,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.white),
+          icon: const Icon(Icons.close),
           onPressed: controller.goBack,
         ),
-        title: const Text(
-          'Student Scanner',
+        actions: [Padding(
+          padding: EdgeInsets.only(right:8.0.w),
+          child: Obx(() => GestureDetector(
+                onTap: controller.toggleFlash,
+                child: Container(
+                
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Icon(
+                    controller.isFlashOn.value ? Icons.flash_on : Icons.flash_off,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
+              )),
+        ),],
+        title:  Text(
+          'Gate Pass Scanner',
           style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
+            fontSize: 18.sp,
             fontWeight: FontWeight.w500,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
-            onPressed: controller.showMenu,
-          ),
-        ],
+      
       ),
       body: Stack(
         children: [
-          MobileScanner(
-            controller: controller.cameraController,
-            onDetect: (capture) {
-              final List<Barcode> barcodes = capture.barcodes;
-              for (final barcode in barcodes) {
-                if (barcode.rawValue != null) {
-                  controller.onQRCodeDetected(barcode.rawValue!);
-                }
-              }
-            },
+          Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20.sp),
+              child: SizedBox(
+                width:270.w ,
+                height: 250.h,
+                child: MobileScanner(
+                  controller: controller.cameraController,
+                  onDetect: (capture) {
+                    final Barcode barcode = capture.barcodes.first;
+                    if(barcode.rawValue!=null){
+                    controller.onQRCodeDetected(barcode.rawValue.toString());
+                    }
+                   
+                  },
+                ),
+              ),
+            ),
           ),
           
           Container(
@@ -51,40 +75,26 @@ class ScannerScreen extends GetView<ScannerController> {
               color: Colors.black.withOpacity(0.5),
             ),
             child: Stack(
-              children: [
-                Center(
-                  child: Container(
-                    width: 280,
-                    height: 280,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                ),
-                
+              children: [  
                 Center(
                   child: SizedBox(
-                    width: 280,
-                    height: 280,
+                   width:270.w ,
+              height: 250.h,
                     child: Stack(
                       children: [
                         Positioned(
                           top: -2,
                           left: -2,
                           child: Container(
-                            width: 30,
-                            height: 30,
-                            decoration: const BoxDecoration(
+                            width: 45.w,
+                            height: 45.h,
+                            decoration: BoxDecoration(
                               border: Border(
-                                top: BorderSide(color: Colors.white, width: 4),
-                                left: BorderSide(color: Colors.white, width: 4),
+                                top: BorderSide(color: Colors.white, width: 6.w),
+                                left: BorderSide(color: Colors.white, width: 6.w),
                               ),
                               borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
+                                topLeft: Radius.circular(15.sp),
                               ),
                             ),
                           ),
@@ -94,15 +104,15 @@ class ScannerScreen extends GetView<ScannerController> {
                           top: -2,
                           right: -2,
                           child: Container(
-                            width: 30,
-                            height: 30,
-                            decoration: const BoxDecoration(
+                             width: 45.w,
+                            height: 45.h,
+                            decoration: BoxDecoration(
                               border: Border(
-                                top: BorderSide(color: Colors.white, width: 4),
-                                right: BorderSide(color: Colors.white, width: 4),
+                                top: BorderSide(color: Colors.white, width: 6.w),
+                                right: BorderSide(color: Colors.white, width: 6.w),
                               ),
                               borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(20),
+                                topRight: Radius.circular(15),
                               ),
                             ),
                           ),
@@ -113,34 +123,33 @@ class ScannerScreen extends GetView<ScannerController> {
                           bottom: -2,
                           left: -2,
                           child: Container(
-                            width: 30,
-                            height: 30,
-                            decoration: const BoxDecoration(
+                             width: 45.w,
+                            height: 45.h,
+                            decoration: BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: Colors.white, width: 4),
-                                left: BorderSide(color: Colors.white, width: 4),
+                                bottom: BorderSide(color: Colors.white, width: 6.w),
+                                left: BorderSide(color: Colors.white, width: 6.w),
                               ),
                               borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(20),
+                                bottomLeft: Radius.circular(15),
                               ),
                             ),
                           ),
                         ),
                         
-                        // Bottom-right corner
                         Positioned(
                           bottom: -2,
                           right: -2,
                           child: Container(
-                            width: 30,
-                            height: 30,
-                            decoration: const BoxDecoration(
+                            width: 45.w,
+                            height: 45.h,
+                            decoration:  BoxDecoration(
                               border: Border(
-                                bottom: BorderSide(color: Colors.white, width: 4),
-                                right: BorderSide(color: Colors.white, width: 4),
+                                bottom: BorderSide(color: Colors.white, width: 6.w),
+                                right: BorderSide(color: Colors.white, width: 6.w),
                               ),
                               borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(20),
+                                bottomRight: Radius.circular(15.sp),
                               ),
                             ),
                           ),
@@ -152,70 +161,46 @@ class ScannerScreen extends GetView<ScannerController> {
               ],
             ),
           ),
-          
-          // Flash toggle button
-          Positioned(
-            top: 100,
-            right: 20,
-            child: Obx(() => GestureDetector(
-              onTap: controller.toggleFlash,
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Icon(
-                  controller.isFlashOn.value ? Icons.flash_on : Icons.flash_off,
-                  color: Colors.white,
-                  size: 24,
-                ),
-              ),
-            )),
-          ),
-          
-          // Bottom section
+       
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
             child: Container(
-              padding: const EdgeInsets.all(24),
-              decoration: const BoxDecoration(
-                color: Colors.black,
-              ),
+              padding:  EdgeInsets.all(24.sp),
+            
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: EdgeInsets.symmetric(vertical: 16.sp),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF8E2D56), // Maroon color
-                      borderRadius: BorderRadius.circular(12),
+                      color: AppColors.primaryColor, 
+                      borderRadius: BorderRadius.circular(12.sp),
                     ),
-                    child: const Column(
+                    child:  Column(
                       children: [
                         Text(
-                          'Scan QR code to get student',
+                          'Scan QR code to get gate pass',
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
+                            color:AppColors.textColorWhite,
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         SizedBox(height: 4),
                         Text(
-                          'Quickly and get your student',
+                          'Quickly and get gate pass',
                           style: TextStyle(
-                            color: Colors.white70,
+                            color: AppColors.appBarForeGroundColor.withOpacity(0.6),
                             fontSize: 14,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                 SizedBox(height: 20.h),
                 ],
               ),
             ),
