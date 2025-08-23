@@ -1,3 +1,5 @@
+import 'package:amrita_gatepass/features/GatePass/bindings/gatepass_bindings.dart';
+import 'package:amrita_gatepass/features/GatePass/view/gatepass_details.dart';
 import 'package:amrita_gatepass/features/Home/bindings/home_bindings.dart';
 import 'package:amrita_gatepass/features/Home/view/home_page.dart';
 import 'package:amrita_gatepass/features/Scanner/bindings/scanner_bindings.dart';
@@ -16,6 +18,11 @@ class AppPages {
       name: AppRoutes.homePage,
       page: () => HomePage(),
       binding: HomeBindings(),
+    ),
+      GetPage(
+      name: AppRoutes.gatepass,
+      page: () => GatepassDetails(),
+      binding: GatepassBindings(),
     ),
    ];
 }

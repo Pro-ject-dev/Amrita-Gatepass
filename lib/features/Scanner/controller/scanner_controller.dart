@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:amrita_gatepass/routes/app_routes.dart';
+import 'package:amrita_gatepass/service.dart';
 import 'package:amrita_gatepass/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,7 +11,6 @@ class ScannerController extends GetxController {
   late MobileScannerController cameraController;
   RxBool isFlashOn = false.obs;
   RxBool isScanning = true.obs;
-
 
   @override
   void onInit() {
@@ -29,20 +32,42 @@ class ScannerController extends GetxController {
   void onQRCodeDetected(String qrData) async {
     if (isScanning.value) {
       isScanning.value = false;
-      Get.back();
-      Get.snackbar(
-        "Successfully Scanned",
-        "Qr Code Data : $qrData",
-        snackPosition: SnackPosition.BOTTOM,
-        borderColor: AppColors.primaryColor,
-        borderWidth: 1,
-        backgroundColor: Colors.white,
-        colorText: Colors.black,
-        margin: const EdgeInsets.all(8),
-        duration: const Duration(seconds: 5),
-      );
+      var data = await VenderService().getVisitorPass({"id": qrData});
+      final result = jsonDecode(data);
+      if (result["success"] && result["data"]["html"] != null) {
+        final htmlresponse = result["data"]["html"];
+        Get.offNamed(
+          AppRoutes.gatepass,
+          arguments: {"html_response": htmlresponse},
+        );
+        Get.snackbar(
+  "Successfully Scanned",        
+  "Gate Pass Verified ✅", 
+  snackPosition: SnackPosition.BOTTOM,
+  borderColor: AppColors.primaryColor,
+  borderWidth: 1,
+  backgroundColor: Colors.white,
+  colorText: Colors.black,
+  margin: const EdgeInsets.all(8),
+  duration: const Duration(seconds: 3),
+);
 
-      print("Qr Code Data: ${qrData} -------------------------------> ");
+      }
+      else{
+            Get.back();
+        Get.snackbar(
+          "Invalid QR Code",
+          "Try Again",
+          snackPosition: SnackPosition.BOTTOM,
+          borderColor: AppColors.primaryColor,
+          borderWidth: 1,
+          backgroundColor: Colors.white,
+          colorText: Colors.black,
+          margin: const EdgeInsets.all(8),
+          duration: const Duration(seconds: 3),
+        );
+    
+      }
     }
   }
 
