@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:amrita_gatepass/routes/app_routes.dart';
 import 'package:amrita_gatepass/service.dart';
 import 'package:amrita_gatepass/themes/app_colors.dart';
@@ -32,29 +30,26 @@ class ScannerController extends GetxController {
   void onQRCodeDetected(String qrData) async {
     if (isScanning.value) {
       isScanning.value = false;
-      var data = await VenderService().getVisitorPass({"id": qrData});
-      final result = jsonDecode(data);
-      if (result["success"] && result["data"]["html"] != null) {
+      final result = await VenderService().getVisitorPass({"id": qrData});
+      if (result["success"]) {
         final htmlresponse = result["data"]["html"];
         Get.offNamed(
           AppRoutes.gatepass,
           arguments: {"html_response": htmlresponse},
         );
         Get.snackbar(
-  "Successfully Scanned",        
-  "Gate Pass Verified ✅", 
-  snackPosition: SnackPosition.BOTTOM,
-  borderColor: AppColors.primaryColor,
-  borderWidth: 1,
-  backgroundColor: Colors.white,
-  colorText: Colors.black,
-  margin: const EdgeInsets.all(8),
-  duration: const Duration(seconds: 3),
-);
-
-      }
-      else{
-            Get.back();
+          "Successfully Scanned",
+          "Gate Pass Verified ✅",
+          snackPosition: SnackPosition.BOTTOM,
+          borderColor: AppColors.primaryColor,
+          borderWidth: 1,
+          backgroundColor: Colors.white,
+          colorText: Colors.black,
+          margin: const EdgeInsets.all(8),
+          duration: const Duration(seconds: 3),
+        );
+      } else {
+        Get.back();
         Get.snackbar(
           "Invalid QR Code",
           "Try Again",
@@ -66,7 +61,6 @@ class ScannerController extends GetxController {
           margin: const EdgeInsets.all(8),
           duration: const Duration(seconds: 3),
         );
-    
       }
     }
   }
