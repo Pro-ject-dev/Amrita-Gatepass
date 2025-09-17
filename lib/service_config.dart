@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:amrita_gatepass/logger.dart';
+import 'package:amrita_gatepass/utils/secure_storage.dart';
 import 'package:dio/dio.dart';
 import 'network_exceptions.dart';
 
@@ -7,7 +9,7 @@ import 'network_exceptions.dart';
 const String Serverurl = 'https://mobile-api.amrita.ac.in/gatelog/';
 
 
-const String authServiceUrl = '$Serverurl';
+const String authServiceUrl = Serverurl;
 const _defaultConnectTimeout = Duration(milliseconds: 60000);
 const _defaultReceiveTimeout = Duration(milliseconds: 60000);
 CancelToken globalCancelToken = CancelToken();
@@ -15,11 +17,10 @@ CancelToken globalCancelToken = CancelToken();
 HttpClient? http;
 class HttpClient {
   static Map<String, String> requestHeaders = {
-    // "Content-Type": "x-www-form-urlencoded",
-    "TOKEN": "uVdje4diDotUaPu2wetmlitvn8eiraoaAkQ0RexmuXn5gqce3oplyJyttufpnhBeHbgicuNZoWMYtynnraLCKFtIho9l1srzGcmTrnr6OreSEoiot7nd",
-    "ACCESSTOKEN":"lVJrPWHsnYepienrCtaauzog7LdocNw2ytuaeQdniRlcZ1oyrvm6IUodOtXtyx9tfrn5rDjqtGheiuirtBoecguahuFAbnM8in4k3pln0tommoESKeeT",
-    "x-api-key":"8dbc466c-755f-4b6c-88b6-ca4e721fdff9",
-    "AUTHKEY":"4mrtOPEqStErbI8R87lPMTqyIfYaDAVGT2HQQH1+nDc=",
+    "TOKEN": "ItoetYdtiKepilOQorAJyettxttneinn5cewovCnsTu12mt3mydeoUaSLnaINu8jrnrig7dhrRlnbcHoEGaulozkmgeX0Brq9M6rVouyfuZhcFWap4PD",
+    "ACCESSTOKEN":"nrroit7JcYguthewmFxmloNDtCnGoraeOo9vmoPe4reuctEdnnne3uiora1Ie6Ba5uAu2jodyyg8lKqnMpziRtXskrZTpcLnybWSlihaiQeUHttd0ftV",
+    "x-api-key":SecureStorage().getXApiKey().toString(),
+    "AUTHKEY":SecureStorage().getAuthKey().toString(),
     "EMAILID":"anoojkv@am.amrita.edu"
   };
 
@@ -50,6 +51,7 @@ class HttpClient {
     CancelToken? cancelToken,
     ProgressCallback? onReceiveProgress,
   }) async {
+    Console.log("API call: GET $uri, queryParameters: $queryParameters");
     try {
       var response = await http!.authService.get(
         uri,
@@ -58,13 +60,16 @@ class HttpClient {
         cancelToken: globalCancelToken,
         onReceiveProgress: onReceiveProgress,
       );
-
+      Console.log("API response: GET $uri, response: ${response.data}");
       return response;
     } on SocketException catch (e) {
+      Console.error("API error: GET $uri, error: $e");
       throw SocketException(e.toString());
     } on FormatException catch (_) {
+      Console.error("API error: GET $uri, error: FormatException");
       throw FormatException("Unable to process the data");
     } catch (e) {
+      Console.error("API error: GET $uri, error: $e");
       throw NetworkExceptions.getDioException(e);
     }
   }
@@ -78,6 +83,7 @@ class HttpClient {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
+    Console.log("API call: POST $uri, data: $data");
     try {
       var response = await http!.authService.post(
         uri,
@@ -88,14 +94,17 @@ class HttpClient {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
-
+      Console.log("API response: POST $uri, response: ${response.data}");
       return response;
     } on SocketException catch (e) {
+      Console.error("API error: POST $uri, error: $e");
       throw SocketException(e.toString());
       
     } on FormatException catch (_) {
+      Console.error("API error: POST $uri, error: FormatException");
       throw FormatException("Unable to process the data");
     } catch (e) {
+      Console.error("API error: POST $uri, error: $e");
       NetworkExceptions.getDioException(e);
     }
   }
@@ -109,6 +118,7 @@ class HttpClient {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
+    Console.log("API call: postWithFile $uri, data: $data");
     try {
       var response = await http!.authService.post(
         uri,
@@ -119,13 +129,16 @@ class HttpClient {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
-
+      Console.log("API response: postWithFile $uri, response: ${response.data}");
       return response;
     } on SocketException catch (e) {
+      Console.error("API error: postWithFile $uri, error: $e");
       throw SocketException(e.toString());
     } on FormatException catch (_) {
+      Console.error("API error: postWithFile $uri, error: FormatException");
       throw FormatException("Unable to process the data");
     } catch (e) {
+      Console.error("API error: postWithFile $uri, error: $e");
       NetworkExceptions.getDioException(e);
     }
   }
@@ -139,6 +152,7 @@ class HttpClient {
   ProgressCallback? onSendProgress,
   ProgressCallback? onReceiveProgress,
 }) async {
+  Console.log("API call: request $uri, data: $data");
   try {
     final response = await http!.authService.request(
       uri,
@@ -149,13 +163,16 @@ class HttpClient {
       onSendProgress: onSendProgress,
       onReceiveProgress: onReceiveProgress,
     );
-
+    Console.log("API response: request $uri, response: ${response.data}");
     return response;
   } on  SocketException catch (e) {
+    Console.error("API error: request $uri, error: $e");
     throw SocketException(e.toString());
   } on FormatException {
+    Console.error("API error: request $uri, error: FormatException");
     throw FormatException("Unable to process the data");
   } catch (e) {
+    Console.error("API error: request $uri, error: $e");
     throw NetworkExceptions.getDioException(e);
   }
 }

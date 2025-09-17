@@ -5,7 +5,7 @@ class AppColors{
   static Color secondaryColor=Color(0xffD82A60);
 
   static Color textColorWhite = Color(0xffffffff);
-  static Color textColorBlack = Color(0);
+  static Color textColorBlack = Color(0x00000000);
 
   static Color appBarForeGroundColor = Color(0xffffffff);
 

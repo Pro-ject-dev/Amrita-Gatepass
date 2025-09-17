@@ -30,12 +30,14 @@ class ScannerController extends GetxController {
   void onQRCodeDetected(String qrData) async {
     if (isScanning.value) {
       isScanning.value = false;
-      final result = await VenderService().getVisitorPass({"id": qrData});
+      try {
+       final result = await VenderService().getVisitorPass({"id": qrData});
       if (result["success"]) {
         final htmlresponse = result["data"]["html"];
+        final visitorId = result["data"]["std_visit_id"];
         Get.offNamed(
           AppRoutes.gatepass,
-          arguments: {"html_response": htmlresponse},
+          arguments: {"html_response": htmlresponse, "visitor_id": visitorId},
         );
         Get.snackbar(
           "Successfully Scanned",
@@ -62,6 +64,21 @@ class ScannerController extends GetxController {
           duration: const Duration(seconds: 3),
         );
       }
+      } catch (e) {
+      Get.back();
+        Get.snackbar(
+          "Something went wrong",
+          "Try Again",
+          snackPosition: SnackPosition.BOTTOM,
+          borderColor: AppColors.primaryColor,
+          borderWidth: 1,
+          backgroundColor: Colors.white,
+          colorText: Colors.black,
+          margin: const EdgeInsets.all(8),
+          duration: const Duration(seconds: 3),
+        );
+      }
+      
     }
   }
 
